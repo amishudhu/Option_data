@@ -21,27 +21,27 @@ from sklearn.model_selection import train_test_split
 from keras.callbacks import EarlyStopping
 
 def Data_process(Picklefile):
+    with open(Picklefile, 'rb') as f:
+        Datagroup=pickle.load(f, encoding="latin-1")
     
-    Datagroup=pd.read_pickle(Picklefile)
-    Datagroup_X=[Datagroup['S'],Datagroup['K'],Datagroup['T'],Datagroup['r'],Datagroup['G-vol']]
+		Datagroup_X=[Datagroup['S'],Datagroup['K'],Datagroup['T'],Datagroup['r'],Datagroup['G-vol']]
 
-    Datagroup_X=pd.concat(Datagroup_X,axis=1)
-    Norm_Datagroup_X=(Datagroup_X-Datagroup_X.mean())/Datagroup_X.std()
-    Norm_Datagroup_X['Trading_Date']=Datagroup['Trading_Date']
+		Datagroup_X=pd.concat(Datagroup_X,axis=1)
+		Norm_Datagroup_X=(Datagroup_X-Datagroup_X.mean())/Datagroup_X.std()
+		Norm_Datagroup_X['Trading_Date']=Datagroup['Trading_Date']
 
-    
-    Datagroup_Y=np.log(Datagroup['Opt_Price'])
-    Datagroup_Y=Datagroup_Y.replace([np.inf, -np.inf], np.nan)
-    Datagroup_Y=pd.DataFrame(Datagroup_Y)
-    Datagroup_Data=pd.concat([Norm_Datagroup_X,Datagroup_Y],axis=1)
-    Datagroup_Data = Datagroup_Data.dropna()
-    Datagroup_Data_X=pd.concat([Datagroup_Data['S'],Datagroup_Data['K'],Datagroup_Data['T'],Datagroup_Data['r'],Datagroup_Data['G-vol']],axis=1)
-    Datagroup_Data_Y=pd.concat([Datagroup_Data['Opt_Price']],axis=1)
-    X_train, X_test, Y_train, Y_test = train_test_split(Datagroup_Data_X, Datagroup_Data_Y, test_size=0.2)
-    return  X_train, X_test, Y_train, Y_test
-with open('ITM_call_data.pkl', 'rb') as f:
-    Traintest=pickle.load(f, encoding="latin-1")
-#Traintest=Data_process('gs://mylovely/ITM_call_data.pkl')
+
+		Datagroup_Y=np.log(Datagroup['Opt_Price'])
+		Datagroup_Y=Datagroup_Y.replace([np.inf, -np.inf], np.nan)
+		Datagroup_Y=pd.DataFrame(Datagroup_Y)
+		Datagroup_Data=pd.concat([Norm_Datagroup_X,Datagroup_Y],axis=1)
+		Datagroup_Data = Datagroup_Data.dropna()
+		Datagroup_Data_X=pd.concat([Datagroup_Data['S'],Datagroup_Data['K'],Datagroup_Data['T'],Datagroup_Data['r'],Datagroup_Data['G-vol']],axis=1)
+		Datagroup_Data_Y=pd.concat([Datagroup_Data['Opt_Price']],axis=1)
+		X_train, X_test, Y_train, Y_test = train_test_split(Datagroup_Data_X, Datagroup_Data_Y, test_size=0.2)
+		return  X_train, X_test, Y_train, Y_test
+
+Traintest=Data_process('ITM_call_data.pkl')
 def model_arch():
     #strategy = tf.distribute.MirroredStrategy()
     #with tf.device('/gpu:0'):
