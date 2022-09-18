@@ -39,8 +39,10 @@ def Data_process(Picklefile):
     Datagroup_Data_Y=pd.concat([Datagroup_Data['Opt_Price']],axis=1)
     X_train, X_test, Y_train, Y_test = train_test_split(Datagroup_Data_X, Datagroup_Data_Y, test_size=0.2)
     return  X_train, X_test, Y_train, Y_test
-
-Traintest=Data_process('gs://mylovely/ITM_call_data.pkl')
+with open('ITM_call_data.pkl', 'rb') as f:
+    Traintest=pd.read_csv(f, encoding="utf-8")
+    return Traintest
+#Traintest=Data_process('gs://mylovely/ITM_call_data.pkl')
 def model_arch():
     #strategy = tf.distribute.MirroredStrategy()
     #with tf.device('/gpu:0'):
