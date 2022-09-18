@@ -40,7 +40,7 @@ def Data_process(Picklefile):
     X_train, X_test, Y_train, Y_test = train_test_split(Datagroup_Data_X, Datagroup_Data_Y, test_size=0.2)
     return  X_train, X_test, Y_train, Y_test
 with open('ITM_call_data.pkl', 'rb') as f:
-    Traintest=pd.read_csv(f, encoding="utf-8")
+    Traintest=pickle.load(f, encoding="latin-1")
 #Traintest=Data_process('gs://mylovely/ITM_call_data.pkl')
 def model_arch():
     #strategy = tf.distribute.MirroredStrategy()
