@@ -41,7 +41,6 @@ def Data_process(Picklefile):
     return  X_train, X_test, Y_train, Y_test
 with open('ITM_call_data.pkl', 'rb') as f:
     Traintest=pd.read_csv(f, encoding="utf-8")
-    return Traintest
 #Traintest=Data_process('gs://mylovely/ITM_call_data.pkl')
 def model_arch():
     #strategy = tf.distribute.MirroredStrategy()
