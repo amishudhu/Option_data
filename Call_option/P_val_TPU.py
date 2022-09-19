@@ -9,6 +9,7 @@ import tensorflow as tf
 sess = tf.compat.v1.Session()
 import pandas as pd
 import os
+import gcsfs
 #os.environ['CUDA_VISIBLE_DEVICES']="0"
 from tensorflow import keras
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -19,10 +20,10 @@ pd.options.display.float_format = '{:40,.8f}'.format
 np.seterr(divide='ignore')
 from sklearn.model_selection import train_test_split
 from keras.callbacks import EarlyStopping
-
+fs = gcsfs.GCSFileSystem(project='My-First-Project')
 def Data_process(Picklefile):
-    with open(Picklefile, 'rb') as f:
-        Datagroup=pickle.load(f, encoding="latin-1")
+    with fs.open(Picklefile) as f:
+        Datagroup=pd.read_csv(f)
     	Datagroup_X=[Datagroup['S'],Datagroup['K'],Datagroup['T'],Datagroup['r'],Datagroup['G-vol']]
 	Datagroup_X=pd.concat(Datagroup_X,axis=1)
 	Norm_Datagroup_X=(Datagroup_X-Datagroup_X.mean())/Datagroup_X.std()
@@ -37,7 +38,7 @@ def Data_process(Picklefile):
 	X_train, X_test, Y_train, Y_test = train_test_split(Datagroup_Data_X, Datagroup_Data_Y, test_size=0.2)
 	return  X_train, X_test, Y_train, Y_test
 
-Traintest=Data_process('ITM_call_data.pkl')
+Traintest=Data_process('mylovely/ITM_call_data.pkl')
 def model_arch():
     #strategy = tf.distribute.MirroredStrategy()
     #with tf.device('/gpu:0'):
