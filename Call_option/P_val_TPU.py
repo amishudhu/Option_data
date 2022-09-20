@@ -1,3 +1,9 @@
+resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='power-machine')
+tf.config.experimental_connect_to_cluster(resolver)
+# This is the TPU initialization code that has to be at the beginning.
+tf.tpu.experimental.initialize_tpu_system(resolver)
+print("All devices: ", tf.config.list_logical_devices('TPU'))
+strategy = tf.distribute.experimental.TPUStrategy(resolver)
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -86,10 +92,4 @@ def p_val_est():
         Gradient_sq_sum.loc[z]=[np.mean(np.square(Gradient_list[:,0])),np.mean(np.square(Gradient_list[:,1])),np.mean(np.square(Gradient_list[:,2])),np.mean(np.square(Gradient_list[:,3])),np.mean(np.square(Gradient_list[:,4]))]
     for m in range(len(Gradient_sq_sum.columns)):
         print(f'The 90th, 95th and 99th percentiles for {list(Traintest[0].columns.values)[m]} are: ' + repr(np.percentile(Gradient_sq_sum[Gradient_sq_sum.columns[m]], 90)) + ',' + repr(np.percentile(Gradient_sq_sum[Gradient_sq_sum.columns[m]], 95)) + ', and ' + repr(np.percentile(Gradient_sq_sum[Gradient_sq_sum.columns[m]], 99))+ '.')
-import tensorflow as tf
-
-resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
-tf.config.experimental_connect_to_cluster(resolver)
-tf.tpu.experimental.initialize_tpu_system(resolver)
-strategy = tf.distribute.experimental.TPUStrategy(resolver)
 full=strategy.run(p_val_est())
